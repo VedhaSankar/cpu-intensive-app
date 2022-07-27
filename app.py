@@ -1,18 +1,34 @@
 from flask import Flask, render_template
 import os
+from multiprocessing import Pool
+from multiprocessing import cpu_count
+import signal
+
+stop_loop = 0
 
 
 app = Flask(__name__)
 
-def stress():
+def exit_chld(x, y):
 
-    time_in_seconds = 420
+    global stop_loop
+    stop_loop = 1
 
-    cmd = f"stress --cpu 1 --timeout {time_in_seconds}s"
+def f(x):
 
-    os.system(cmd)
+    global stop_loop
+    while not stop_loop:
+        x*x
 
-    return 0
+# def stress():
+
+#     time_in_seconds = 420
+
+#     cmd = f"stress --cpu 1 --timeout {time_in_seconds}s"
+
+#     os.system(cmd)
+
+#     return 0
 
 @app.route('/')
 def start():
@@ -27,10 +43,19 @@ def ping():
     }
     return result
 
-@app.route('/stress')
-def stress():
+@app.route('/stress-cpu')
+def stress_cpu():
+
+    processes = cpu_count()
+    print('-' * 20)
+    print('Running load on CPU(s)')
+    print('Utilizing %d cores' % processes)
+    print('-' * 20)
+    pool = Pool(processes)
+    pool.map(f, range(processes))
     
-    stress()
+    # stress()
+    # pass
 
 if __name__== "__main__":
     app.run(host="0.0.0.0", debug = True, port = 5003)
