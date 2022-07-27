@@ -20,15 +20,6 @@ def f(x):
     while not stop_loop:
         x*x
 
-# def stress():
-
-#     time_in_seconds = 420
-
-#     cmd = f"stress --cpu 1 --timeout {time_in_seconds}s"
-
-#     os.system(cmd)
-
-#     return 0
 
 @app.route('/')
 def start():
@@ -53,9 +44,7 @@ def stress_cpu():
     print('-' * 20)
     pool = Pool(processes)
     pool.map(f, range(processes))
-    
-    # stress()
-    # pass
+
 
 if __name__== "__main__":
     app.run(host="0.0.0.0", debug = True, port = 5003)
