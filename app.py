@@ -45,6 +45,19 @@ def stress_cpu():
     pool = Pool(processes)
     pool.map(f, range(processes))
 
+@app.route('/stress-memory')
+def stress_mem():
+
+    print('-' * 20)
+    print('Running load on memory')
+    print('-' * 20)
+
+    while True:
+        x = [1] * 100000000
+        x = None
+        del x
+
+
 
 if __name__== "__main__":
     app.run(host="0.0.0.0", debug = True, port = 5003)
